@@ -1,19 +1,100 @@
 import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Film, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, Volume2 } from 'lucide-react';
 import { reelVideos } from '../../data/instagramMedia';
 import MediaModal from '../ui/MediaModal';
 
-export default function VideoRail() {
-  const scrollContainerRef = useRef(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+function ReelCard({ reel, onClick }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef(null);
 
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
-      scrollContainerRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
     }
   };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="flex-shrink-0 w-[240px] sm:w-[280px] aspect-[9/16] rounded-2xl sm:rounded-3xl overflow-hidden bg-charcoal-900 relative group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 border border-charcoal-900/10 transform hover:-translate-y-2 hover:scale-[1.02]"
+    >
+      {/* High performance media switcher: Poster by default + Active video preview on hover */}
+      <img
+        src={reel.thumbnail}
+        alt={reel.caption || "Yaari Social Reel"}
+        className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-opacity duration-300 ${
+          isHovered && reel.videoSrc ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+
+      {reel.videoSrc && (
+        <video
+          ref={videoRef}
+          src={reel.videoSrc}
+          poster={reel.thumbnail}
+          loop
+          muted
+          playsInline
+          preload="none"
+          disablePictureInPicture
+          disableRemotePlayback
+          className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-opacity duration-300 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      )}
+
+      {/* Dark Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/90 via-charcoal-950/20 to-black/20 group-hover:from-charcoal-950/95 transition-all duration-300 pointer-events-none" />
+
+      {/* Floating Play Indicator Button */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className={`w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all duration-300 shadow-lg ${
+            isHovered ? 'scale-110 bg-coffee-600' : 'scale-100'
+          }`}
+        >
+          <Play size={20} className="ml-0.5 fill-white" />
+        </div>
+      </div>
+
+      {/* Bottom Caption Excerpt */}
+      <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 text-white transform group-hover:-translate-y-1 transition-transform duration-300 pointer-events-none">
+        <span className="text-[10px] uppercase tracking-widest text-coffee-400 font-semibold mb-1 block">
+          @yaari_social
+        </span>
+        <p className="text-xs sm:text-sm font-medium leading-snug line-clamp-2 text-ivory-100 drop-shadow-sm">
+          {reel.caption || "Cozy backyard vibes & delicious coffee in Silvassa."}
+        </p>
+        {reel.likes > 0 && (
+          <div className="text-[10px] text-ivory-200/70 font-mono mt-2 flex items-center gap-2">
+            <span>❤️ {reel.likes.toLocaleString()}</span>
+            <span>💬 {reel.comments}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function VideoRail() {
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState('normal');
+
+  // Duplicate the array for seamless infinite loop
+  const displayReels = [...reelVideos, ...reelVideos];
 
   return (
     <section
@@ -24,9 +105,9 @@ export default function VideoRail() {
         {/* Section Header */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-coffee-500" />
+            <span className="w-2 h-2 rounded-full bg-coffee-500 animate-pulse" />
             <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-coffee-600">
-              Reels & Moments
+              Live Feed • Reels & Moments
             </span>
           </div>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-charcoal-900 font-normal leading-[1.08] tracking-tight">
@@ -37,88 +118,57 @@ export default function VideoRail() {
           </p>
         </div>
 
-        {/* Scroll Arrows */}
+        {/* Action Controls (Pause / Resume & Direction) */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => scroll('left')}
-            className="p-3 rounded-full bg-white border border-charcoal-900/10 text-charcoal-800 hover:bg-charcoal-900 hover:text-white transition-all duration-300 shadow-sm"
-            aria-label="Scroll left"
+            onClick={() => setIsPaused(!isPaused)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-charcoal-900/10 text-charcoal-800 hover:bg-charcoal-900 hover:text-white transition-all duration-300 shadow-sm text-xs font-medium uppercase tracking-wider"
           >
-            <ChevronLeft size={18} />
+            {isPaused ? <Play size={13} className="fill-current" /> : <Pause size={13} className="fill-current" />}
+            <span>{isPaused ? 'Resume Motion' : 'Pause'}</span>
           </button>
+
           <button
-            onClick={() => scroll('right')}
-            className="p-3 rounded-full bg-white border border-charcoal-900/10 text-charcoal-800 hover:bg-charcoal-900 hover:text-white transition-all duration-300 shadow-sm"
-            aria-label="Scroll right"
+            onClick={() => setDirection(prev => (prev === 'normal' ? 'reverse' : 'normal'))}
+            className="p-2.5 rounded-full bg-white border border-charcoal-900/10 text-charcoal-800 hover:bg-charcoal-900 hover:text-white transition-all duration-300 shadow-sm"
+            title={direction === 'normal' ? "Reverse direction" : "Normal direction"}
+            aria-label="Reverse motion direction"
           >
-            <ChevronRight size={18} />
+            {direction === 'normal' ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
           </button>
         </div>
       </div>
 
-      {/* Horizontal Rail Container */}
-      <div
-        ref={scrollContainerRef}
-        className="flex gap-5 sm:gap-6 overflow-x-auto no-scrollbar px-4 sm:px-6 lg:px-8 pb-4 pt-2 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
-      >
-        {reelVideos.map((reel, idx) => (
-          <motion.div
-            key={reel.id || idx}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: idx * 0.08 }}
-            onClick={() => setSelectedVideo(reel)}
-            className="flex-shrink-0 w-[240px] sm:w-[280px] aspect-[9/16] rounded-2xl sm:rounded-3xl overflow-hidden bg-charcoal-900 relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 snap-start border border-charcoal-900/10"
-          >
-            {/* Video or Poster */}
-            {reel.videoSrc ? (
-              <video
-                src={reel.videoSrc}
-                poster={reel.thumbnail}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                disablePictureInPicture
-                className="w-full h-full object-cover transform-gpu group-hover:scale-105 transition-transform duration-700"
-              />
-            ) : (
-              <img
-                src={reel.thumbnail}
-                alt={reel.caption || "Yaari Social Reel"}
-                className="w-full h-full object-cover transform-gpu group-hover:scale-105 transition-transform duration-700"
-              />
-            )}
+      {/* Continuous Marquee Rail Container */}
+      <div className="relative w-full overflow-hidden select-none group/rail">
+        {/* Soft edge gradient masks */}
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-ivory-100 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-ivory-100 to-transparent z-10 pointer-events-none" />
 
-            {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/90 via-charcoal-950/20 to-black/20 group-hover:from-charcoal-950/95 transition-all duration-300" />
+        <div
+          className={`flex gap-5 sm:gap-6 py-4 w-max ${
+            direction === 'reverse' ? 'animate-marquee-reverse' : 'animate-marquee'
+          }`}
+          style={{
+            animationDuration: '60s',
+            animationPlayState: isPaused ? 'paused' : undefined,
+          }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {displayReels.map((reel, idx) => (
+            <ReelCard
+              key={`${reel.id || idx}-${idx}`}
+              reel={reel}
+              onClick={() => setSelectedVideo(reel)}
+            />
+          ))}
+        </div>
+      </div>
 
-            {/* Floating Play Indicator Button */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-coffee-600 transition-all duration-300 shadow-lg">
-                <Play size={20} className="ml-0.5 fill-white" />
-              </div>
-            </div>
-
-            {/* Bottom Caption Excerpt */}
-            <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
-              <span className="text-[10px] uppercase tracking-widest text-coffee-400 font-semibold mb-1 block">
-                @yaari_social
-              </span>
-              <p className="text-xs sm:text-sm font-medium leading-snug line-clamp-2 text-ivory-100 drop-shadow-sm">
-                {reel.caption || "Cozy backyard vibes & delicious coffee in Silvassa."}
-              </p>
-              {reel.likes > 0 && (
-                <div className="text-[10px] text-ivory-200/70 font-mono mt-2 flex items-center gap-2">
-                  <span>❤️ {reel.likes.toLocaleString()}</span>
-                  <span>💬 {reel.comments}</span>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        ))}
+      {/* Subtle Hint */}
+      <div className="text-center pt-6 text-[11px] text-taupe-500 font-mono">
+        Hover over any video to preview & click to watch with sound in full view
       </div>
 
       {/* Media Detail Modal */}
