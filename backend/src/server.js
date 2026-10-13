@@ -21,6 +21,7 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
   'http://127.0.0.1:3000',
+  'https://yaari-social.vercel.app',
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL
 ].filter(Boolean);
@@ -80,9 +81,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`☕ Yaari Social Cafe API running on http://localhost:${PORT}`);
-  console.log(`📡 Health endpoint: http://localhost:${PORT}/api/health`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`☕ Yaari Social Cafe API running on http://localhost:${PORT}`);
+    console.log(`📡 Health endpoint: http://localhost:${PORT}/api/health`);
+  });
+}
 
 export default app;

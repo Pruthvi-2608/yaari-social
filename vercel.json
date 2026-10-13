@@ -4,6 +4,10 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/admin",
       "destination": "/admin/index.html"
     },
@@ -16,7 +20,7 @@
       "destination": "/admin/index.html"
     },
     {
-      "source": "/((?!admin).*)$",
+      "source": "/((?!admin|api).*)$",
       "destination": "/index.html"
     }
   ]

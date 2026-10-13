@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, CheckCircle, XCircle, X, Video, Upload, Play } from 'lucide-react';
+import { Plus, Edit2, Trash2, CheckCircle, XCircle, X, Video, Upload, Play, Folder } from 'lucide-react';
 import { api } from '../services/api';
+import MediaLibraryModal from './MediaLibraryModal';
 
 export default function VideosTab() {
   const [videos, setVideos] = useState([]);
@@ -8,6 +9,8 @@ export default function VideosTab() {
   const [filterPlacement, setFilterPlacement] = useState('all');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [libraryTarget, setLibraryTarget] = useState('video'); // 'video' | 'thumbnail'
   const [editingVideo, setEditingVideo] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -325,7 +328,20 @@ export default function VideosTab() {
               </div>
 
               <div>
-                <label className="block text-charcoal-700 font-semibold mb-1">Video File / Path *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-charcoal-700 font-semibold">Video File / Path *</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLibraryTarget('video');
+                      setIsLibraryOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border border-coffee-500/30 bg-coffee-500/10 text-coffee-700 hover:bg-coffee-500/20 font-medium text-[11px] transition-colors"
+                  >
+                    <Folder size={12} />
+                    <span>Choose Saved Video</span>
+                  </button>
+                </div>
                 <div className="space-y-2">
                   <input
                     type="text"
@@ -345,7 +361,20 @@ export default function VideosTab() {
               </div>
 
               <div>
-                <label className="block text-charcoal-700 font-semibold mb-1">Poster Thumbnail</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-charcoal-700 font-semibold">Poster Thumbnail</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLibraryTarget('thumbnail');
+                      setIsLibraryOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border border-coffee-500/30 bg-coffee-500/10 text-coffee-700 hover:bg-coffee-500/20 font-medium text-[11px] transition-colors"
+                  >
+                    <Folder size={12} />
+                    <span>Choose Saved Photo</span>
+                  </button>
+                </div>
                 <div className="space-y-2">
                   <input
                     type="text"
@@ -406,6 +435,27 @@ export default function VideosTab() {
           </div>
         </div>
       )}
+
+      <MediaLibraryModal
+        isOpen={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+        onSelect={(item) => {
+          if (libraryTarget === 'video') {
+            setFormData({
+              ...formData,
+              video_path: item.url,
+              thumbnail_path: item.thumbnail || formData.thumbnail_path
+            });
+          } else {
+            setFormData({
+              ...formData,
+              thumbnail_path: item.thumbnail || item.url
+            });
+          }
+        }}
+        filterType={libraryTarget === 'video' ? 'video' : 'image'}
+        title={libraryTarget === 'video' ? 'Select Saved Video' : 'Select Poster Thumbnail Photo'}
+      />
     </div>
   );
 }

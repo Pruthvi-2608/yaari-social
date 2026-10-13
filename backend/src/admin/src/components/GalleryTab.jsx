@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, CheckCircle, XCircle, X, Image as ImageIcon, Upload } from 'lucide-react';
+import { Plus, Edit2, Trash2, CheckCircle, XCircle, X, Image as ImageIcon, Upload, Folder } from 'lucide-react';
 import { api } from '../services/api';
+import MediaLibraryModal from './MediaLibraryModal';
 
 export default function GalleryTab() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -237,7 +239,17 @@ export default function GalleryTab() {
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
-                <label className="block text-charcoal-700 font-semibold mb-1">Photo Upload (Supabase Storage) *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-charcoal-700 font-semibold">Photo (Upload or Choose Saved) *</label>
+                  <button
+                    type="button"
+                    onClick={() => setIsLibraryOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-coffee-500/30 bg-coffee-500/10 text-coffee-700 hover:bg-coffee-500/20 font-medium text-xs transition-colors"
+                  >
+                    <Folder size={14} />
+                    <span>Choose Saved Photo</span>
+                  </button>
+                </div>
                 <div className="p-4 rounded-2xl border-2 border-dashed border-charcoal-900/15 bg-ivory-50 text-center space-y-2">
                   {formData.media_path ? (
                     <div className="relative inline-block">
@@ -246,11 +258,19 @@ export default function GalleryTab() {
                         alt="Uploaded preview"
                         className="w-32 h-24 rounded-xl object-cover border border-charcoal-900/10 mx-auto"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, media_path: '', thumbnail_path: '' })}
+                        className="absolute -top-2 -right-2 p-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-sm"
+                        title="Remove photo"
+                      >
+                        <X size={12} />
+                      </button>
                     </div>
                   ) : (
                     <div className="py-2 text-taupe-400">
                       <Upload size={24} className="mx-auto mb-1 text-coffee-500" />
-                      <span>{uploading ? 'Uploading to Supabase...' : 'Click to select image file'}</span>
+                      <span>{uploading ? 'Uploading to Supabase...' : 'Click below to select image file, or choose from saved'}</span>
                     </div>
                   )}
                   <input
@@ -339,6 +359,14 @@ export default function GalleryTab() {
           </div>
         </div>
       )}
+
+      <MediaLibraryModal
+        isOpen={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+        onSelect={(item) => setFormData({ ...formData, media_path: item.url, thumbnail_path: item.thumbnail || item.url })}
+        filterType="image"
+        title="Select Gallery Photo"
+      />
     </div>
   );
 }

@@ -9,9 +9,11 @@ import {
   Image as ImageIcon,
   Sparkles,
   ArrowUpDown,
-  X
+  X,
+  Folder
 } from 'lucide-react';
 import { api } from '../services/api';
+import MediaLibraryModal from './MediaLibraryModal';
 
 export default function MenuTab() {
   const [items, setItems] = useState([]);
@@ -22,6 +24,7 @@ export default function MenuTab() {
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -437,20 +440,38 @@ export default function MenuTab() {
               </div>
 
               <div>
-                <label className="block text-charcoal-700 font-semibold mb-1">Item Photo (Supabase Storage)</label>
-                <div className="flex items-center gap-2">
+                <label className="block text-charcoal-700 font-semibold mb-1">Item Photo</label>
+                <div className="flex flex-wrap items-center gap-2">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="text-[11px] text-taupe-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-coffee-500/10 file:text-coffee-600 file:font-medium hover:file:bg-coffee-500/20"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setIsLibraryOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-coffee-500/30 bg-coffee-500/10 text-coffee-700 hover:bg-coffee-500/20 font-medium text-xs transition-colors"
+                  >
+                    <Folder size={14} />
+                    <span>Choose Saved Photo</span>
+                  </button>
                   {formData.image_path && (
-                    <img
-                      src={formData.image_path}
-                      alt="Preview"
-                      className="w-8 h-8 rounded-lg object-cover border border-charcoal-900/10 ml-auto"
-                    />
+                    <div className="flex items-center gap-2 ml-auto">
+                      <img
+                        src={formData.image_path}
+                        alt="Preview"
+                        className="w-8 h-8 rounded-lg object-cover border border-charcoal-900/10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, image_path: '' })}
+                        className="text-taupe-400 hover:text-red-500 p-1"
+                        title="Remove image"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -497,6 +518,14 @@ export default function MenuTab() {
           </div>
         </div>
       )}
+
+      <MediaLibraryModal
+        isOpen={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+        onSelect={(item) => setFormData({ ...formData, image_path: item.url })}
+        filterType="image"
+        title="Select Menu Item Photo"
+      />
     </div>
   );
 }
