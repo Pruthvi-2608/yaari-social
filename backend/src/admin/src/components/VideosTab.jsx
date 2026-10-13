@@ -439,18 +439,20 @@ export default function VideosTab() {
       <MediaLibraryModal
         isOpen={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}
-        onSelect={(item) => {
+        onSelect={(selected) => {
+          const url = typeof selected === 'string' ? selected : (selected?.url || '');
+          const thumb = typeof selected === 'object' && selected?.thumbnail ? selected.thumbnail : '';
           if (libraryTarget === 'video') {
-            setFormData({
-              ...formData,
-              video_path: item.url,
-              thumbnail_path: item.thumbnail || formData.thumbnail_path
-            });
+            setFormData(prev => ({
+              ...prev,
+              video_path: url,
+              thumbnail_path: thumb || prev.thumbnail_path
+            }));
           } else {
-            setFormData({
-              ...formData,
-              thumbnail_path: item.thumbnail || item.url
-            });
+            setFormData(prev => ({
+              ...prev,
+              thumbnail_path: thumb || url
+            }));
           }
         }}
         filterType={libraryTarget === 'video' ? 'video' : 'image'}

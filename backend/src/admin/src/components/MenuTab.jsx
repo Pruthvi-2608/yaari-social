@@ -522,7 +522,10 @@ export default function MenuTab() {
       <MediaLibraryModal
         isOpen={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}
-        onSelect={(item) => setFormData({ ...formData, image_path: item.url })}
+        onSelect={(selected) => {
+          const url = typeof selected === 'string' ? selected : (selected?.url || '');
+          setFormData(prev => ({ ...prev, image_path: url }));
+        }}
         filterType="image"
         title="Select Menu Item Photo"
       />

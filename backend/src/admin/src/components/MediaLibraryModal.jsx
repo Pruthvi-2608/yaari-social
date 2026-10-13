@@ -165,6 +165,10 @@ export default function MediaLibraryModal({
                   <div
                     key={item.path}
                     onClick={() => setSelectedItem(item)}
+                    onDoubleClick={() => {
+                      onSelect(item, item.url);
+                      onClose();
+                    }}
                     className={`group relative rounded-2xl overflow-hidden aspect-square border-2 cursor-pointer transition-all bg-charcoal-900 ${
                       isSelected
                         ? 'border-coffee-600 ring-2 ring-coffee-600/30 shadow-md scale-[1.02]'
@@ -245,11 +249,12 @@ export default function MediaLibraryModal({
               disabled={!selectedItem}
               onClick={() => {
                 if (selectedItem) {
-                  onSelect(selectedItem.url, selectedItem);
+                  // Support both callback signatures: onSelect(item) and onSelect(url)
+                  onSelect(selectedItem, selectedItem.url);
                   onClose();
                 }
               }}
-              className="px-5 py-2 rounded-full bg-coffee-600 hover:bg-coffee-500 text-white font-semibold transition-colors disabled:opacity-50 shadow-sm"
+              className="px-5 py-2 rounded-full bg-coffee-600 hover:bg-coffee-500 text-white font-semibold transition-colors disabled:opacity-50 shadow-sm cursor-pointer"
             >
               Use Selected Media
             </button>

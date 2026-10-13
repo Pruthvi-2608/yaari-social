@@ -363,7 +363,15 @@ export default function GalleryTab() {
       <MediaLibraryModal
         isOpen={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}
-        onSelect={(item) => setFormData({ ...formData, media_path: item.url, thumbnail_path: item.thumbnail || item.url })}
+        onSelect={(selected) => {
+          const url = typeof selected === 'string' ? selected : (selected?.url || '');
+          const thumb = typeof selected === 'object' && selected?.thumbnail ? selected.thumbnail : url;
+          setFormData(prev => ({
+            ...prev,
+            media_path: url,
+            thumbnail_path: thumb
+          }));
+        }}
         filterType="image"
         title="Select Gallery Photo"
       />
