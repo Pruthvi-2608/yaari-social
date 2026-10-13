@@ -1,58 +1,113 @@
 # Yaari Social Cafe & Backyard ☕✨
 
-A cozy, premium, social-first cafe website built for **Yaari Social** (Silvassa) using **React.js, Tailwind CSS, Framer Motion, and Lucide React**.
+A cozy, premium, full-stack cafe platform built for **Yaari Social** (Silvassa) featuring:
+- **Public Website** (`frontend/`): React 19, Tailwind CSS, Framer Motion, and Lucide React.
+- **Backend & Admin Panel** (`backend/`): Express.js REST API with a dedicated Vite React Admin Dashboard.
+- **Persistent Database & Storage**: Supabase PostgreSQL (`Yaari Social Cafe`) with Row-Level Security and `yaari-media` Storage Bucket.
 
-![Yaari Social Preview](public/brand/yaari-social-logo.png)
+![Yaari Social Preview](frontend/public/brand/yaari-social-logo.png)
+
+---
+
+## 🏗️ Architecture & Structure
+
+```
+yaari-social/
+├── frontend/                     # Public customer-facing website
+│   ├── src/
+│   │   ├── components/           # Hero, Menu, Jamming, Gallery, Videos, etc.
+│   │   ├── services/             # Supabase & backend service layer (with offline fallback)
+│   │   └── data/                 # Authentic transcribed menu & Instagram datasets
+│   ├── public/                   # Optimized video & brand assets
+│   ├── .env                      # Supabase public credentials
+│   └── package.json
+│
+├── backend/                      # Node.js / Express API & Admin Panel
+│   ├── src/
+│   │   ├── admin/                # Admin Panel SPA (React + Tailwind)
+│   │   ├── controllers/          # Menu, Gallery, Video, Content & Upload controllers
+│   │   ├── middleware/           # Supabase JWT authentication & admin role guard
+│   │   ├── routes/               # /api routes (public reads + admin mutations)
+│   │   └── server.js             # Express server on port 5000
+│   ├── .env                      # Supabase service role secret & config
+│   └── package.json
+│
+├── supabase/                     # Database migrations & schemas
+│   └── migrations/
+│       └── 20261012000000_init_yaari_schema.sql
+│
+└── docs/                         # Architecture, schema, and deployment guides
+    ├── architecture.md
+    ├── database-schema.md
+    └── deployment.md
+```
+
+---
 
 ## 🌿 Features
 
-- **Cinematic Hero**: GPU-accelerated looping live crowd jamming video with masked typography reveals and audio toggle.
-- **The Yaari Feeling**: Editorial 2-column atmosphere introduction with candid polaroid photography.
-- **Brand Marquee**: Smooth infinite typography banner.
-- **Jamming at Yaari**: Asymmetric live music grid featuring acoustic guitar guest sessions and event posters.
-- **Reels & Video Rail**: 9:16 vertical video cards with autoplay preview loops and full-screen video modal.
-- **Full Digital Menu**: All 13 categories transcribed from the physical menu with real-time search, category filtering, and prices.
-- **Original Menu Lightbox**: Dual-page zoomable photo lightbox for the original physical menu scans (`menu-food.png` & `menu-drinks.png`).
-- **Signature Picks**: Highlights of crowd favorites (Cold Coffee, Yaari Maharaja, Cheese Garlic Bread, Twisters, Pasta).
-- **Dark Statement Section**: High-contrast charcoal section with rotating logo outline motif.
-- **Moments Gallery**: Editorial masonry grid with authentic Instagram candid photos and lightview modal.
-- **About & Visit**: Verified cafe location (*Near Lions College, Opp. Sai Nidhi Dosa, Silvassa - 396230*), timings, and Instagram links.
-- **Mobile Responsive & Accessible**: Fully optimized for mobile screens, keyboard navigation, and reduced-motion settings.
+### 🌟 Customer Website
+- **Cinematic Looping Hero**: Live crowd jamming video with masked typography reveals and audio toggle.
+- **Full Digital Menu**: All 14 categories transcribed from physical menus with real-time search, filters, pricing, and live DB sync.
+- **Physical Menu Lightbox**: Dual-page zoomable lightbox for original physical menu scans.
+- **Jamming at Yaari**: Live music sessions, event flyers, and guest performer spotlights.
+- **9:16 Video Rail**: Autoplay preview loops and full-screen video player modal.
+- **Moments Gallery**: Authentic Instagram candid polaroid & masonry grids.
+- **Visit & Hours**: Accurate address (*Near Lions College, Opp. Sai Nidhi Dosa, Silvassa - 396230*), timings, and direct links.
+- **Resilient Fallback**: If offline or Supabase connection is interrupted, automatically falls back to authentic local data so the site never breaks.
+
+### 🛡️ Admin Dashboard (`/admin`)
+- **Visual Design**: Themed with Yaari brand tokens (Warm Terracotta, Cream, Charcoal).
+- **Menu Management**: Add, edit, reorder items, change prices, toggle availability, upload dish photos.
+- **Category Control**: Create, edit, and organize menu categories.
+- **Media Hub**: Upload photos and videos directly to the Supabase `yaari-media` storage bucket.
+- **Event & Jamming Scheduler**: Update upcoming music nights and performer details.
+- **Site Settings & Visibility**: Toggle public sections (Jamming, Gallery, Videos) and update contact details in real time.
+- **Secure Supabase Auth**: Role-based access control with automatic first-admin onboarding.
 
 ---
 
-## 🛠️ Tech Stack
+## 🗄️ Supabase Project Details
 
-- **Framework**: React 18 + Vite
-- **Styling**: Tailwind CSS
-- **Animation & Motion**: Framer Motion
-- **Icons**: Lucide React
-- **Typography**: Cormorant Garamond (Serif Display) & Manrope (Modern Sans)
+- **Project Name:** `Yaari Social Cafe`
+- **Project Reference:** `nmdutiisiejzconbdshu`
+- **Region:** `ap-south-1` (Mumbai)
+- **Database Tables:** `menu_categories`, `menu_items`, `gallery_items`, `videos`, `site_content`, `site_settings`, `admin_roles`.
+- **Storage Bucket:** `yaari-media` (Public, 100MB limit).
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Development)
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/<your-username>/yaari-social-cafe.git
-   cd yaari-social-cafe
-   ```
+### 1. Prerequisites
+- Node.js 18+
+- npm 9+
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### 2. Install Dependencies
+```bash
+# Install root, frontend, backend and admin dependencies
+npm install
+npm run install:all
+```
 
-3. **Run development server**:
-   ```bash
-   npm run dev
-   ```
+### 3. Run Development Servers
+You can run services independently or concurrently:
 
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
+```bash
+# Run public website (http://localhost:5173)
+npm run dev:frontend
+
+# Run backend API (http://localhost:5000)
+npm run dev:backend
+
+# Run admin dashboard dev server (http://localhost:5174)
+npm run dev:admin
+```
+
+### 4. Build for Production
+```bash
+npm run build
+```
 
 ---
 
