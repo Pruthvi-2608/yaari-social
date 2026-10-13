@@ -52,10 +52,20 @@ export default function JammingTab() {
       ]);
       setJammingVideos(vids || []);
       if (siteRes?.jamming) {
+        const jam = siteRes.jamming;
+        const rawPoster = jam.eventPosterUrl;
+        const normalizedPoster = typeof rawPoster === 'object' && rawPoster !== null
+          ? (rawPoster.url || '')
+          : (typeof rawPoster === 'string' ? rawPoster : '');
+
         setContent(prev => ({
           ...prev,
-          ...siteRes.jamming,
-          eventPosterUrl: siteRes.jamming.eventPosterUrl || prev.eventPosterUrl
+          title: jam.title ?? prev.title,
+          subtitle: jam.subtitle ?? prev.subtitle,
+          eventHeading: jam.eventHeading ?? prev.eventHeading,
+          eventSubtext: jam.eventSubtext ?? prev.eventSubtext,
+          entryNote: jam.entryNote ?? prev.entryNote,
+          eventPosterUrl: normalizedPoster || prev.eventPosterUrl
         }));
       }
     } catch (err) {
@@ -321,7 +331,11 @@ export default function JammingTab() {
             <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-ivory-50 border border-charcoal-900/10">
               <div className="w-28 sm:w-32 aspect-[3/4] rounded-2xl overflow-hidden bg-charcoal-900 border border-charcoal-900/15 flex-shrink-0 shadow-sm relative group">
                 {content.eventPosterUrl ? (
-                  <img src={content.eventPosterUrl} alt="Event Poster" className="w-full h-full object-cover" />
+                  <img
+                    src={typeof content.eventPosterUrl === 'string' ? content.eventPosterUrl : (content.eventPosterUrl?.url || '')}
+                    alt="Event Poster"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-ivory-400 text-xs text-center p-2">
                     No Poster
@@ -347,7 +361,7 @@ export default function JammingTab() {
                 </p>
                 {content.eventPosterUrl && (
                   <p className="text-[10px] text-taupe-500 font-mono truncate max-w-sm mt-1">
-                    {content.eventPosterUrl}
+                    {typeof content.eventPosterUrl === 'string' ? content.eventPosterUrl : (content.eventPosterUrl?.url || '')}
                   </p>
                 )}
               </div>
@@ -367,7 +381,7 @@ export default function JammingTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Section Title</label>
               <input
                 type="text"
-                value={content.title}
+                value={content.title || ''}
                 onChange={(e) => setContent({ ...content, title: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
               />
@@ -377,7 +391,7 @@ export default function JammingTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Intro Narrative</label>
               <textarea
                 rows="3"
-                value={content.subtitle}
+                value={content.subtitle || ''}
                 onChange={(e) => setContent({ ...content, subtitle: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 resize-none"
               />
@@ -387,7 +401,7 @@ export default function JammingTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Live Night Heading</label>
               <input
                 type="text"
-                value={content.eventHeading}
+                value={content.eventHeading || ''}
                 onChange={(e) => setContent({ ...content, eventHeading: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
               />
@@ -397,7 +411,7 @@ export default function JammingTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Event Description</label>
               <textarea
                 rows="2"
-                value={content.eventSubtext}
+                value={content.eventSubtext || ''}
                 onChange={(e) => setContent({ ...content, eventSubtext: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 resize-none"
               />
@@ -407,7 +421,7 @@ export default function JammingTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Entry Terms Note</label>
               <input
                 type="text"
-                value={content.entryNote}
+                value={content.entryNote || ''}
                 onChange={(e) => setContent({ ...content, entryNote: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
               />
@@ -494,7 +508,7 @@ export default function JammingTab() {
                           setLibraryTarget('video_thumbnail');
                           setIsLibraryOpen(true);
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-ivory-100 text-charcoal-800 text-xs font-semibold border border-charcoal-900/10 shadow-2xs"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-ivory-100 text-charcoal-800 text-xs font-semibold border border-charcoal-900/10 shadow-sm"
                       >
                         <Folder size={12} />
                         <span>Choose Saved Photo</span>
@@ -516,7 +530,7 @@ export default function JammingTab() {
                 </div>
                 <input
                   type="text"
-                  value={videoFormData.thumbnail_path}
+                  value={videoFormData.thumbnail_path || ''}
                   onChange={(e) => setVideoFormData({ ...videoFormData, thumbnail_path: e.target.value })}
                   placeholder="Or paste image URL"
                   className="w-full px-3 py-1.5 rounded-lg bg-white border border-charcoal-900/10 text-charcoal-800 text-[11px] font-mono"
@@ -535,7 +549,7 @@ export default function JammingTab() {
                         setLibraryTarget('video_file');
                         setIsLibraryOpen(true);
                       }}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-2xs"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-sm"
                     >
                       <Folder size={12} />
                       <span>Choose Saved Video</span>
@@ -555,7 +569,7 @@ export default function JammingTab() {
                 </div>
                 <input
                   type="text"
-                  value={videoFormData.video_path}
+                  value={videoFormData.video_path || ''}
                   onChange={(e) => setVideoFormData({ ...videoFormData, video_path: e.target.value })}
                   placeholder="Or enter video path (/media/instagram/videos/... or https://...)"
                   className="w-full px-3 py-1.5 rounded-lg bg-white border border-charcoal-900/10 text-charcoal-800 text-[11px] font-mono"
@@ -589,7 +603,8 @@ export default function JammingTab() {
         onClose={() => setIsLibraryOpen(false)}
         filterType={libraryFilter}
         title="Select from Saved Media Library"
-        onSelect={async (url) => {
+        onSelect={async (selected, fallbackUrl) => {
+          const url = (typeof selected === 'string' ? selected : (selected?.url || fallbackUrl)) || '';
           if (libraryTarget === 'poster') {
             const updatedContent = {
               ...content,

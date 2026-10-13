@@ -10,6 +10,7 @@ import HeroTab from './components/HeroTab';
 import ContentTab from './components/ContentTab';
 import SettingsTab from './components/SettingsTab';
 import LoginModal from './components/LoginModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import { api, supabase } from './services/api';
 import { Lock, LogIn, Sparkles, ExternalLink, Menu } from 'lucide-react';
 
@@ -118,15 +119,17 @@ export default function App() {
         {/* Scrollable Tab Views */}
         <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-8">
           <div className="max-w-6xl mx-auto pb-12">
-            {activeTab === 'overview' && <OverviewTab setActiveTab={setActiveTab} />}
-            {activeTab === 'menu' && <MenuTab />}
-            {activeTab === 'categories' && <CategoriesTab />}
-            {activeTab === 'gallery' && <GalleryTab />}
-            {activeTab === 'videos' && <VideosTab />}
-            {activeTab === 'jamming' && <JammingTab />}
-            {activeTab === 'hero' && <HeroTab />}
-            {activeTab === 'content' && <ContentTab />}
-            {activeTab === 'settings' && <SettingsTab />}
+            <ErrorBoundary key={activeTab}>
+              {activeTab === 'overview' && <OverviewTab setActiveTab={setActiveTab} />}
+              {activeTab === 'menu' && <MenuTab />}
+              {activeTab === 'categories' && <CategoriesTab />}
+              {activeTab === 'gallery' && <GalleryTab />}
+              {activeTab === 'videos' && <VideosTab />}
+              {activeTab === 'jamming' && <JammingTab />}
+              {activeTab === 'hero' && <HeroTab />}
+              {activeTab === 'content' && <ContentTab />}
+              {activeTab === 'settings' && <SettingsTab />}
+            </ErrorBoundary>
           </div>
         </main>
       </div>

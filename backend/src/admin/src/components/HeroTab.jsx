@@ -256,7 +256,7 @@ export default function HeroTab() {
                         setLibraryTarget('video');
                         setIsLibraryOpen(true);
                       }}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-2xs"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-sm"
                     >
                       <Folder size={12} />
                       <span>Choose Saved Video</span>
@@ -276,7 +276,7 @@ export default function HeroTab() {
                 </div>
                 <input
                   type="text"
-                  value={mediaForm.video_path}
+                  value={mediaForm.video_path || ''}
                   onChange={(e) => setMediaForm({ ...mediaForm, video_path: e.target.value })}
                   placeholder="URL or /media/..."
                   className="w-full px-3 py-1.5 rounded-xl bg-white border border-charcoal-900/10 text-charcoal-900 font-mono text-[11px]"
@@ -297,7 +297,7 @@ export default function HeroTab() {
                         setLibraryTarget('poster');
                         setIsLibraryOpen(true);
                       }}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-2xs"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-700 hover:text-coffee-600 bg-white px-2.5 py-1 rounded-lg border border-charcoal-900/10 shadow-sm"
                     >
                       <Folder size={12} />
                       <span>Choose Saved Photo</span>
@@ -317,7 +317,7 @@ export default function HeroTab() {
                 </div>
                 <input
                   type="text"
-                  value={mediaForm.thumbnail_path}
+                  value={mediaForm.thumbnail_path || ''}
                   onChange={(e) => setMediaForm({ ...mediaForm, thumbnail_path: e.target.value })}
                   placeholder="URL or /media/..."
                   className="w-full px-3 py-1.5 rounded-xl bg-white border border-charcoal-900/10 text-charcoal-900 font-mono text-[11px]"
@@ -350,7 +350,7 @@ export default function HeroTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Pill Badge Text</label>
               <input
                 type="text"
-                value={content.badgeText}
+                value={content.badgeText || ''}
                 onChange={(e) => setContent({ ...content, badgeText: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
               />
@@ -360,7 +360,7 @@ export default function HeroTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Hero Main Headline</label>
               <input
                 type="text"
-                value={content.heading}
+                value={content.heading || ''}
                 onChange={(e) => setContent({ ...content, heading: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 font-serif text-sm"
               />
@@ -370,7 +370,7 @@ export default function HeroTab() {
               <label className="block text-charcoal-700 font-semibold mb-1">Hero Subtitle</label>
               <textarea
                 rows="3"
-                value={content.subtitle}
+                value={content.subtitle || ''}
                 onChange={(e) => setContent({ ...content, subtitle: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 resize-none font-light"
               />
@@ -381,7 +381,7 @@ export default function HeroTab() {
                 <label className="block text-charcoal-700 font-semibold mb-1">Primary Button Label</label>
                 <input
                   type="text"
-                  value={content.ctaText}
+                  value={content.ctaText || ''}
                   onChange={(e) => setContent({ ...content, ctaText: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900"
                 />
@@ -390,7 +390,7 @@ export default function HeroTab() {
                 <label className="block text-charcoal-700 font-semibold mb-1">Primary Button Link</label>
                 <input
                   type="text"
-                  value={content.ctaLink}
+                  value={content.ctaLink || ''}
                   onChange={(e) => setContent({ ...content, ctaLink: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 font-mono text-[11px]"
                 />
@@ -402,7 +402,7 @@ export default function HeroTab() {
                 <label className="block text-charcoal-700 font-semibold mb-1">Secondary Button Label</label>
                 <input
                   type="text"
-                  value={content.secondaryCtaText}
+                  value={content.secondaryCtaText || ''}
                   onChange={(e) => setContent({ ...content, secondaryCtaText: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900"
                 />
@@ -411,7 +411,7 @@ export default function HeroTab() {
                 <label className="block text-charcoal-700 font-semibold mb-1">Secondary Button Link</label>
                 <input
                   type="text"
-                  value={content.secondaryCtaLink}
+                  value={content.secondaryCtaLink || ''}
                   onChange={(e) => setContent({ ...content, secondaryCtaLink: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 font-mono text-[11px]"
                 />
@@ -443,7 +443,8 @@ export default function HeroTab() {
         onClose={() => setIsLibraryOpen(false)}
         filterType={libraryFilter}
         title={libraryTarget === 'video' ? 'Select Saved Hero Video' : 'Select Saved Hero Photo'}
-        onSelect={(url) => {
+        onSelect={(selected, fallbackUrl) => {
+          const url = (typeof selected === 'string' ? selected : (selected?.url || fallbackUrl)) || '';
           if (libraryTarget === 'video') {
             const updated = { ...mediaForm, video_path: url };
             setMediaForm(updated);
