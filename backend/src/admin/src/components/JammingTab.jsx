@@ -79,7 +79,17 @@ export default function JammingTab() {
     e.preventDefault();
     try {
       setSaving(true);
-      await api.updateSiteContent('jamming', content);
+      const rawPoster = content.eventPosterUrl;
+      const cleanPoster = typeof rawPoster === 'object' && rawPoster !== null
+        ? (rawPoster.url || '')
+        : (typeof rawPoster === 'string' ? rawPoster : '');
+
+      const payload = {
+        ...content,
+        eventPosterUrl: cleanPoster || content.eventPosterUrl
+      };
+      await api.updateSiteContent('jamming', payload);
+      setContent(payload);
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {

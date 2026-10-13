@@ -28,9 +28,16 @@ export default function JammingSection() {
 
     fetchSiteContent().then(res => {
       if (isMounted && res.content?.jamming) {
+        const jam = res.content.jamming;
+        const rawPoster = jam.eventPosterUrl;
+        const posterUrl = typeof rawPoster === 'object' && rawPoster !== null
+          ? (rawPoster.url || '')
+          : (typeof rawPoster === 'string' ? rawPoster : '');
+
         setJammingCopy(prev => ({
           ...prev,
-          ...res.content.jamming
+          ...jam,
+          eventPosterUrl: posterUrl || prev.eventPosterUrl
         }));
       }
     });
@@ -161,15 +168,28 @@ export default function JammingSection() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative group rounded-3xl overflow-hidden bg-charcoal-800 border border-white/10 p-6 flex flex-col sm:flex-row items-center gap-5 shadow-xl"
             >
-              {(jammingCopy.eventPosterUrl || jamming.eventPoster?.thumbnail) && (
-                <div className="w-full sm:w-36 aspect-[3/4] rounded-2xl overflow-hidden flex-shrink-0 bg-charcoal-900 border border-white/10">
-                  <img
-                    src={jammingCopy.eventPosterUrl || jamming.eventPoster.thumbnail}
-                    alt="Live Musical Night Event at Yaari Social"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              )}
+              {(() => {
+                const rawPoster = jammingCopy.eventPosterUrl;
+                const posterSrc = (typeof rawPoster === 'string' && rawPoster.trim())
+                  ? rawPoster.trim()
+                  : ((typeof rawPoster === 'object' && rawPoster?.url) ? rawPoster.url : (jamming.eventPoster?.thumbnail || '/media/instagram/images/DcLMoGnNRJ6.jpg'));
+
+                if (!posterSrc) return null;
+                return (
+                  <div className="w-full sm:w-36 aspect-[3/4] rounded-2xl overflow-hidden flex-shrink-0 bg-charcoal-900 border border-white/10">
+                    <img
+                      src={posterSrc}
+                      alt="Live Musical Night Event at Yaari Social"
+                      onError={(e) => {
+                        if (e.currentTarget.src !== '/media/instagram/images/DcLMoGnNRJ6.jpg') {
+                          e.currentTarget.src = '/media/instagram/images/DcLMoGnNRJ6.jpg';
+                        }
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                );
+              })()}
 
               <div className="flex flex-col justify-center space-y-2.5 text-left w-full">
                 <div className="flex items-center gap-1.5 text-xs text-coffee-400 font-medium uppercase tracking-wider">
