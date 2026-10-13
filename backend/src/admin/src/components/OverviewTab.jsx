@@ -84,26 +84,26 @@ export default function OverviewTab({ setActiveTab }) {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#282522] to-[#181614] text-ivory-50 border border-charcoal-700 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#282522] to-[#181614] text-ivory-50 border border-charcoal-700 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coffee-500/20 text-coffee-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coffee-500/20 text-coffee-400 text-xs font-semibold uppercase tracking-wider mb-2.5 sm:mb-3">
             <Sparkles size={13} />
             <span>Yaari Social Cafe Management</span>
           </div>
-          <h2 className="font-serif text-3xl font-medium tracking-tight">
+          <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight">
             Welcome to the Yaari Admin Panel
           </h2>
-          <p className="text-xs sm:text-sm text-ivory-200/70 font-light mt-1 max-w-xl">
+          <p className="text-xs sm:text-sm text-ivory-200/70 font-light mt-1 max-w-xl leading-relaxed">
             Manage your digital menu, authentic Instagram media, acoustic jamming nights, and website copy in real time without editing code.
           </p>
         </div>
 
         {/* Database Status Badge */}
-        <div className="p-4 rounded-2xl bg-black/40 border border-white/10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <Database size={20} />
+        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-black/40 border border-white/10 flex items-center gap-3 self-start md:self-auto">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+            <Database size={18} />
           </div>
           <div>
             <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
@@ -119,17 +119,17 @@ export default function OverviewTab({ setActiveTab }) {
 
       {/* Metrics Grid */}
       <div>
-        <h3 className="font-serif text-xl font-medium text-charcoal-900 mb-4">
+        <h3 className="font-serif text-lg sm:text-xl font-medium text-charcoal-900 mb-3 sm:mb-4">
           Live Database Metrics
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           {metricCards.map((card, idx) => {
             const Icon = card.icon;
             return (
               <div
                 key={idx}
                 onClick={() => setActiveTab(card.tab)}
-                className="p-5 rounded-2xl bg-white border border-charcoal-900/10 shadow-sm hover:shadow-md hover:border-coffee-500/30 transition-all cursor-pointer flex flex-col justify-between group"
+                className="p-4 sm:p-5 rounded-2xl bg-white border border-charcoal-900/10 shadow-sm hover:shadow-md hover:border-coffee-500/30 transition-all cursor-pointer flex flex-col justify-between group"
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium text-charcoal-600">{card.title}</span>
@@ -138,7 +138,7 @@ export default function OverviewTab({ setActiveTab }) {
                   </div>
                 </div>
                 <div>
-                  <div className="text-3xl font-serif font-semibold text-charcoal-900 group-hover:text-coffee-600 transition-colors">
+                  <div className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-900 group-hover:text-coffee-600 transition-colors">
                     {loading ? '...' : card.value}
                   </div>
                   <p className="text-[11px] text-taupe-500 font-light mt-1">{card.subtext}</p>
@@ -150,11 +150,11 @@ export default function OverviewTab({ setActiveTab }) {
       </div>
 
       {/* Quick Actions */}
-      <div className="p-6 rounded-3xl bg-ivory-100/60 border border-charcoal-900/10">
-        <h3 className="font-serif text-xl font-medium text-charcoal-900 mb-4">
+      <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-ivory-100/60 border border-charcoal-900/10">
+        <h3 className="font-serif text-lg sm:text-xl font-medium text-charcoal-900 mb-3 sm:mb-4">
           Quick Actions
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <button
             onClick={() => setActiveTab('menu')}
             className="p-4 rounded-2xl bg-white border border-charcoal-900/10 text-left hover:border-coffee-500/40 hover:shadow-sm transition-all"
