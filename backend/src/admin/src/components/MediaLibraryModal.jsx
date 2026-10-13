@@ -91,7 +91,7 @@ export default function MediaLibraryModal({
   const folders = ['all', ...Array.from(new Set(media.map(m => m.folder)))];
 
   return (
-    <div className="fixed inset-0 z-50 bg-charcoal-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+    <div className="fixed inset-0 z-[70] bg-charcoal-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fade-in">
       <div className="bg-white rounded-3xl max-w-4xl w-full h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-charcoal-900/10">
         {/* Header */}
         <div className="px-6 py-4 border-b border-charcoal-900/10 flex items-center justify-between flex-shrink-0 bg-ivory-50">
@@ -240,12 +240,14 @@ export default function MediaLibraryModal({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={onClose}
               className="px-4 py-2 rounded-full border border-charcoal-900/20 text-charcoal-700 hover:bg-ivory-50 font-medium"
             >
               Cancel
             </button>
             <button
+              type="button"
               disabled={!selectedItem}
               onClick={() => {
                 if (selectedItem) {
