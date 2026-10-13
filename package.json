@@ -3,13 +3,19 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "backend/src/admin"
+  ],
   "scripts": {
+    "build": "node scripts/build-all.js",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:admin": "npm --prefix backend/src/admin run build",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run start",
     "dev:admin": "npm --prefix backend/src/admin run dev",
-    "build": "npm run build:frontend && npm run build:admin",
-    "build:frontend": "npm --prefix frontend run build",
-    "build:admin": "npm --prefix backend/src/admin run build",
+    "install:all": "npm --prefix frontend install && npm --prefix backend install && npm --prefix backend/src/admin install",
     "start": "npm --prefix backend run start"
   }
 }

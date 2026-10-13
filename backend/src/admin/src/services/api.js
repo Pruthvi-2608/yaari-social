@@ -5,7 +5,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 async function getAuthHeader() {
   const { data: { session } } = await supabase.auth.getSession();

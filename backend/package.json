@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "build": "npm --prefix src/admin run build",
+    "build:admin": "npm --prefix src/admin run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
