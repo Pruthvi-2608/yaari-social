@@ -8,7 +8,6 @@ import {
   PlusCircle,
   ExternalLink,
   CheckCircle2,
-  Database,
   Sparkles
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -99,28 +98,12 @@ export default function OverviewTab({ setActiveTab }) {
             Manage your digital menu, authentic Instagram media, acoustic jamming nights, and website copy in real time without editing code.
           </p>
         </div>
-
-        {/* Database Status Badge */}
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-black/40 border border-white/10 flex items-center gap-3 self-start md:self-auto">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
-            <Database size={18} />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Supabase Connected</span>
-            </div>
-            <p className="text-[11px] text-taupe-400 font-mono mt-0.5">
-              Yaari Social Cafe (ap-south-1)
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Metrics Grid */}
       <div>
         <h3 className="font-serif text-lg sm:text-xl font-medium text-charcoal-900 mb-3 sm:mb-4">
-          Live Database Metrics
+          Cafe Content Overview
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           {metricCards.map((card, idx) => {
