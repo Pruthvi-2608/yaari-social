@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, Key, Sparkles, AlertCircle, Database } from 'lucide-react';
+import { Mail, Key, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
 
 export default function LoginModal({ onLoginSuccess }) {
@@ -53,28 +53,6 @@ export default function LoginModal({ onLoginSuccess }) {
           <span>Connected: Yaari Social Cafe (ap-south-1)</span>
         </div>
 
-        {/* One-click admin demo / default credentials */}
-        <div className="p-3.5 rounded-2xl bg-coffee-50 border border-coffee-200 text-xs text-charcoal-700 flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-coffee-800 flex items-center gap-1.5">
-              <Sparkles size={14} className="text-coffee-600" /> Default Admin Account
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('yaarisocialcafe@gmail.com');
-                setPassword('YaariAdmin2026!');
-              }}
-              className="px-2.5 py-1 rounded-full bg-coffee-600 hover:bg-coffee-700 text-white font-medium text-[11px] transition-colors"
-            >
-              Fill Credentials
-            </button>
-          </div>
-          <div className="text-[11px] font-mono text-charcoal-600 space-y-0.5">
-            <div>Email: <strong className="text-charcoal-800">yaarisocialcafe@gmail.com</strong></div>
-            <div>Password: <strong className="text-charcoal-800">YaariAdmin2026!</strong></div>
-          </div>
-        </div>
 
         {error && (
           <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
