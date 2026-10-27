@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Key, AlertCircle } from 'lucide-react';
+import { Mail, Key, AlertCircle, ArrowLeft } from 'lucide-react';
 import { api } from '../services/api';
 
 export default function LoginModal({ onLoginSuccess }) {
@@ -13,7 +13,7 @@ export default function LoginModal({ onLoginSuccess }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await api.login(email, password);
+      const data = await api.login(email.trim(), password);
       if (data?.user) {
         onLoginSuccess(data.user);
       }
@@ -25,11 +25,11 @@ export default function LoginModal({ onLoginSuccess }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#181614]/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-md w-full p-8 space-y-6 shadow-2xl border border-charcoal-900/10">
+    <div className="min-h-screen bg-gradient-to-br from-[#1c1a17] via-[#181614] to-[#12100e] flex items-center justify-center p-4 sm:p-6 relative">
+      <div className="bg-white rounded-3xl max-w-md w-full p-7 sm:p-9 space-y-6 shadow-2xl border border-charcoal-900/10 animate-fade-in relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-full bg-ivory-100 border border-charcoal-900/10 p-2 mx-auto flex items-center justify-center shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-ivory-100 border border-charcoal-900/10 p-2.5 mx-auto flex items-center justify-center shadow-sm">
             <img
               src="/brand/yaari-social-logo.png"
               alt="Yaari Social"
@@ -39,20 +39,13 @@ export default function LoginModal({ onLoginSuccess }) {
               }}
             />
           </div>
-          <h2 className="font-serif text-2xl font-medium text-charcoal-900">
+          <h2 className="font-serif text-2xl sm:text-3xl font-medium text-charcoal-900">
             Admin Portal Login
           </h2>
           <p className="text-xs text-charcoal-600 font-light max-w-xs mx-auto">
-            Secure Supabase Auth for Yaari Social Cafe managers.
+            Sign in with your administrator credentials to manage Yaari Social Cafe.
           </p>
         </div>
-
-        {/* Project Pill */}
-        <div className="p-3 rounded-2xl bg-ivory-50 border border-charcoal-900/10 flex items-center justify-center gap-2 text-xs font-mono text-charcoal-700">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Connected: Yaari Social Cafe (ap-south-1)</span>
-        </div>
-
 
         {error && (
           <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
@@ -71,8 +64,8 @@ export default function LoginModal({ onLoginSuccess }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@yaarisocial.com"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
+                placeholder="yaaricafe@gmail.com"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 text-xs"
               />
             </div>
           </div>
@@ -87,7 +80,7 @@ export default function LoginModal({ onLoginSuccess }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-50 border border-charcoal-900/10 text-charcoal-900 focus:outline-none focus:border-coffee-500 text-xs"
               />
             </div>
           </div>
@@ -95,14 +88,21 @@ export default function LoginModal({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-full bg-coffee-600 hover:bg-coffee-500 text-white font-semibold text-xs tracking-wider uppercase transition-colors shadow-sm disabled:opacity-50 mt-2"
+            className="w-full py-3 rounded-full bg-coffee-600 hover:bg-coffee-500 text-white font-semibold text-xs tracking-wider uppercase transition-colors shadow-sm disabled:opacity-50 mt-2 cursor-pointer"
           >
-            {loading ? 'Authenticating...' : 'Sign In as Administrator'}
+            {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
           </button>
         </form>
 
-        <div className="text-center pt-2 border-t border-charcoal-900/10 text-[11px] text-taupe-500 font-light">
-          Protected by Supabase Auth & Row Level Security.
+        <div className="flex items-center justify-between pt-2 border-t border-charcoal-900/10 text-[11px] text-taupe-500">
+          <a
+            href="/"
+            className="inline-flex items-center gap-1.5 text-charcoal-600 hover:text-coffee-600 transition-colors font-medium"
+          >
+            <ArrowLeft size={12} />
+            <span>Customer Website</span>
+          </a>
+          <span>Protected Session</span>
         </div>
       </div>
     </div>
